@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from './entity/tag.entity';
+import { Tag } from './tag.entity';
 import { TagsController } from './tags.controller';
 import { TagsService } from './tags.service';
 
@@ -8,5 +8,6 @@ import { TagsService } from './tags.service';
   imports: [TypeOrmModule.forFeature([Tag])],
   providers: [TagsService],
   controllers: [TagsController],
+  exports: [TagsService],
 })
 export class TagsModule {}

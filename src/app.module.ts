@@ -2,18 +2,23 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Tag } from './modules/tags/entity/tag.entity';
+import { List } from './modules/list/list.entity';
+import { Tag } from './modules/tags/tag.entity';
 import { TagsModule } from './modules/tags/tags.module';
+import { Subtask } from './modules/tasks/entities/sub-task.entity';
+import { Task } from './modules/tasks/entities/task.entity';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: './db.sql',
-      entities: [Tag],
+      entities: [Tag, List, Task, Subtask],
       synchronize: true,
     }),
     TagsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

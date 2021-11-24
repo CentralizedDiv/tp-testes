@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateTagDTO, UpdateTagDTO } from './dtos/create-tag.dto';
-import { Tag } from './entity/tag.entity';
+import { CreateTagDTO } from './dtos/create-tag.dto';
+import { UpdateTagDTO } from './dtos/update-tag.dto';
+import { Tag } from './tag.entity';
 
 @Injectable()
 export class TagsService {
@@ -28,6 +29,6 @@ export class TagsService {
   }
 
   delete(id: number) {
-    return this.tagsRepository.delete(id);
+    return this.tagsRepository.softDelete(id);
   }
 }

@@ -1,0 +1,18 @@
+import { BaseEntity } from 'src/utils/common.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Task } from '../tasks/entities/task.entity';
+
+@Entity()
+export class List extends BaseEntity {
+  @Column()
+  label: string;
+
+  @Column()
+  description: string;
+
+  @Column('datetime', { nullable: true, default: null })
+  dueDate: Date | null;
+
+  @OneToMany(() => Task, (task) => task.list)
+  tasks: Task[];
+}

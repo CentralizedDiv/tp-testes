@@ -5,10 +5,11 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
-import { CreateTagDTO, UpdateTagDTO } from './dtos/create-tag.dto';
+import { CreateTagDTO } from './dtos/create-tag.dto';
+import { UpdateTagDTO } from './dtos/update-tag.dto';
 import { TagsService } from './tags.service';
 
 @Controller('tags')
@@ -31,8 +32,7 @@ export class TagsController {
     return this.tagsService.findById(id);
   }
 
-  @Put(':id')
-  @HttpCode(201)
+  @Patch(':id')
   update(@Param('id') id: number, @Body() updateTagDTO: UpdateTagDTO) {
     return this.tagsService.update(id, updateTagDTO);
   }
