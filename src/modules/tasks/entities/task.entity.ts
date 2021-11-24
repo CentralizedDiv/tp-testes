@@ -24,8 +24,8 @@ export class Task extends BaseEntity {
   @Column()
   label: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true, default: null })
+  description: string | null;
 
   @Column('datetime', { nullable: true, default: null })
   dueDate: Date | null;
@@ -39,7 +39,7 @@ export class Task extends BaseEntity {
   @OneToMany(() => Subtask, (subtask) => subtask.task, { cascade: true })
   subtasks: Subtask[];
 
-  @ManyToMany(() => Tag, (tag) => tag.tasks)
+  @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
   @JoinTable()
   tags: Tag[];
 

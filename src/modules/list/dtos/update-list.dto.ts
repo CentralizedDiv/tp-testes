@@ -1,3 +1,12 @@
-import { CreateListDTO } from './create-list.dto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export type UpdateListDTO = Partial<CreateListDTO>;
+export class UpdateListDTO {
+  @ApiPropertyOptional()
+  label?: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+
+  @ApiPropertyOptional()
+  dueDate?: string;
+}

@@ -8,12 +8,14 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateSubtaskDTO } from './dtos/create-sub-task.dto';
 import { CreateTaskDTO } from './dtos/create-task.dto';
 import { UpdateSubtaskDTO } from './dtos/update-sub-task.dto';
 import { UpdateTaskDTO } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
 
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
@@ -63,7 +65,10 @@ export class TasksController {
   }
 
   @Delete(':id/sub-tasks/:subtaskId')
-  deleteSubtask(@Param('subtaskId') subtaskId: number) {
+  deleteSubtask(
+    @Param('id') _id: number,
+    @Param('subtaskId') subtaskId: number,
+  ) {
     return this.tasksService.deleteSubtask(subtaskId);
   }
 }

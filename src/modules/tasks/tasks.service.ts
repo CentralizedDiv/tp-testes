@@ -40,7 +40,7 @@ export class TasksService {
   async update(id: number, updateTaskDTO: UpdateTaskDTO) {
     return this.tasksRepository.update(
       id,
-      await this.initializeTask(updateTaskDTO),
+      await this.initializeTask(updateTaskDTO, id),
     );
   }
 
@@ -86,21 +86,28 @@ export class TasksService {
     if (taskDTO.completedAt) {
       task.completedAt = new Date(taskDTO.completedAt);
     }
-    if (taskDTO.list) {
-      task.list = await this.listsService.findById(taskDTO.list);
+    if (taskDTO.listId) {
+      task.list = await this.listsService.findById(taskDTO.listId);
+      delete task['listId'];
     }
-    if (taskDTO.tags?.length > 0) {
+    if (taskDTO.tagsIds) {
       if (id) {
         const entity = await this.tasksRepository.findOne(id);
-        entity.tags = [];
-        await this.tasksRepository.save(entity);
-      }
-      const tagsPromise = taskDTO.tags.map((tagId) =>
-        this.tagsService.findById(tagId),
-      );
-      task.tags = await Promise.all(tagsPromise);
-    }
 
+        const queryBuilder = this.tasksRepository
+          .createQueryBuilder()
+          .relation(Task, 'tags')
+          .of(entity);
+
+        const currentTags = await queryBuilder.loadMany();
+        await queryBuilder.addAndRemove(taskDTO.tagsIds, currentTags);
+        delete task['tagsIds'];
+      } else {
+        task.tags = await Promise.all(
+          taskDTO.tagsIds.map((tagId) => this.tagsService.findById(tagId)),
+        );
+      }
+    }
     return task;
   }
 }

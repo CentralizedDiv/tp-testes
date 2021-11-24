@@ -1,3 +1,9 @@
-import { CreateTagDTO } from './create-tag.dto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export type UpdateTagDTO = Partial<CreateTagDTO>;
+export class UpdateTagDTO {
+  @ApiPropertyOptional()
+  label?: string;
+
+  @ApiPropertyOptional()
+  color?: string;
+}

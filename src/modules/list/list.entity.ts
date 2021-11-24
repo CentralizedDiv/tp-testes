@@ -7,8 +7,8 @@ export class List extends BaseEntity {
   @Column()
   label: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true, default: null })
+  description: string | null;
 
   @Column('datetime', { nullable: true, default: null })
   dueDate: Date | null;

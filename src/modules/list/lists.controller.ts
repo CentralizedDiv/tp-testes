@@ -8,10 +8,12 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateListDTO } from './dtos/create-list.dto';
 import { UpdateListDTO } from './dtos/update-list.dto';
 import { ListsService } from './lists.service';
 
+@ApiTags('Lists')
 @Controller('lists')
 export class ListsController {
   constructor(private readonly listsService: ListsService) {}
