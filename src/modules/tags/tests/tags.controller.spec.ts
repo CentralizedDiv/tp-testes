@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { repositoryMockFactory } from 'src/utils/testing-utils';
-import { Tag } from '../entity/tag.entity';
+import { Tag } from '../tag.entity';
 import { TagsController } from '../tags.controller';
 import { TagsService } from '../tags.service';
 
@@ -32,6 +32,10 @@ describe('TagsController', () => {
           id: 1,
           label: 'Importante',
           color: 'red',
+          tasks: [],
+          createdAt: '',
+          updatedAt: '',
+          deletedAt: null,
         },
       ];
       jest
@@ -48,6 +52,10 @@ describe('TagsController', () => {
         id: 1,
         label: 'Importante',
         color: 'red',
+        tasks: [],
+        createdAt: '',
+        updatedAt: '',
+        deletedAt: null,
       };
       jest
         .spyOn(tagsService, 'create')
@@ -63,6 +71,10 @@ describe('TagsController', () => {
         id: 1,
         label: 'Importante',
         color: 'red',
+        tasks: [],
+        createdAt: '',
+        updatedAt: '',
+        deletedAt: null,
       };
       jest
         .spyOn(tagsService, 'findById')
@@ -90,6 +102,7 @@ describe('TagsController', () => {
   describe('delete', () => {
     it('should return an delete result', async () => {
       const result = {
+        generatedMaps: [],
         raw: [],
         affected: 1,
       };
