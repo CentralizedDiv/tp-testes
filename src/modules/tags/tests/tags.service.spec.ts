@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { repositoryMockFactory } from 'src/utils/testing-utils';
-import { Tag } from '../entity/tag.entity';
+import { Tag } from '../tag.entity';
 import { TagsService } from '../tags.service';
 
 describe('TagsService', () => {
@@ -10,6 +10,10 @@ describe('TagsService', () => {
     id: 1,
     label: 'Importante',
     color: 'red',
+    tasks: [],
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
   };
 
   beforeEach(async () => {
@@ -59,6 +63,7 @@ describe('TagsService', () => {
   describe('delete', () => {
     it('should return an delete result', async () => {
       const result = {
+        generatedMaps: [],
         raw: [],
         affected: 1,
       };
