@@ -7,7 +7,15 @@ import { TagsService } from '../tags.service';
 
 describe('TagsController', () => {
   let tagsController: TagsController;
-  let tagsService: TagsService;
+  const entity: Tag = {
+    id: 1,
+    label: 'Importante',
+    color: 'red',
+    tasks: [],
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
+  };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -16,71 +24,38 @@ describe('TagsController', () => {
         TagsService,
         {
           provide: getRepositoryToken(Tag),
-          useFactory: repositoryMockFactory,
+          useFactory: repositoryMockFactory(entity),
         },
       ],
     }).compile();
 
-    tagsService = moduleRef.get<TagsService>(TagsService);
     tagsController = moduleRef.get<TagsController>(TagsController);
   });
 
   describe('findAll', () => {
     it('should return an array of Tags', async () => {
-      const result = [
-        {
-          id: 1,
-          label: 'Importante',
-          color: 'red',
-          tasks: [],
-          createdAt: '',
-          updatedAt: '',
-          deletedAt: null,
-        },
-      ];
-      jest
-        .spyOn(tagsService, 'findAll')
-        .mockImplementation(() => Promise.resolve(result));
-
-      expect(await tagsController.findAll()).toBe(result);
+      expect(await tagsController.findAll()).toStrictEqual([entity]);
     });
   });
 
   describe('create', () => {
     it('should return a Tag', async () => {
       const result = {
-        id: 1,
-        label: 'Importante',
+        id: 2,
+        label: 'Importante2',
         color: 'red',
         tasks: [],
         createdAt: '',
         updatedAt: '',
         deletedAt: null,
       };
-      jest
-        .spyOn(tagsService, 'create')
-        .mockImplementation(() => Promise.resolve(result));
-
       expect(await tagsController.create(result)).toBe(result);
     });
   });
 
   describe('findById', () => {
     it('should return a Tag', async () => {
-      const result = {
-        id: 1,
-        label: 'Importante',
-        color: 'red',
-        tasks: [],
-        createdAt: '',
-        updatedAt: '',
-        deletedAt: null,
-      };
-      jest
-        .spyOn(tagsService, 'findById')
-        .mockImplementation(() => Promise.resolve(result));
-
-      expect(await tagsController.findById(result.id)).toBe(result);
+      expect(await tagsController.findById(entity.id)).toStrictEqual(entity);
     });
   });
 
@@ -91,11 +66,8 @@ describe('TagsController', () => {
         raw: [],
         affected: 1,
       };
-      jest
-        .spyOn(tagsService, 'update')
-        .mockImplementation(() => Promise.resolve(result));
 
-      expect(await tagsController.update(1, {})).toBe(result);
+      expect(await tagsController.update(1, {})).toStrictEqual(result);
     });
   });
 
@@ -106,11 +78,8 @@ describe('TagsController', () => {
         raw: [],
         affected: 1,
       };
-      jest
-        .spyOn(tagsService, 'delete')
-        .mockImplementation(() => Promise.resolve(result));
 
-      expect(await tagsController.delete(1)).toBe(result);
+      expect(await tagsController.delete(1)).toStrictEqual(result);
     });
   });
 });

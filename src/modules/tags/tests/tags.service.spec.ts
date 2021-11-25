@@ -39,6 +39,7 @@ describe('TagsService', () => {
   describe('create', () => {
     it('should return a Tag', async () => {
       expect(await tagsService.create(entity)).toBe(entity);
+      expect(await tagsService.findAll()).toHaveLength(2);
     });
   });
 
@@ -69,6 +70,7 @@ describe('TagsService', () => {
       };
 
       expect(await tagsService.delete(1)).toStrictEqual(result);
+      expect(await tagsService.findAll()).toHaveLength(0);
     });
   });
 });
