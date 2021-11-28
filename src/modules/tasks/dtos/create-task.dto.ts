@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TaskPriority } from '../entities/task.entity';
-
 export class CreateTaskDTO {
   @ApiProperty()
   label: string;

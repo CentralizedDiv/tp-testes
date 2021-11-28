@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/utils/common.entity';
+import { BaseEntity } from './../../utils/common.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Task } from '../tasks/entities/task.entity';
 
