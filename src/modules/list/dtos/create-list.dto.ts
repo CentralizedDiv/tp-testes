@@ -8,5 +8,5 @@ export class CreateListDTO {
   description: string;
 
   @ApiProperty()
-  dueDate: string;
+  dueDate: Date;
 }
