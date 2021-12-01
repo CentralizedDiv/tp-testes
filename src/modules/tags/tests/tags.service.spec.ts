@@ -47,6 +47,11 @@ describe('TagsService', () => {
     it('should return a Tag', async () => {
       expect(await tagsService.findById(entity.id)).toBe(entity);
     });
+
+    it('should return undefined', async () => {
+      const undefinedId = 10;
+      expect(await tagsService.findById(undefinedId)).toBe(undefined);
+    });
   });
 
   describe('update', () => {
@@ -58,6 +63,17 @@ describe('TagsService', () => {
       };
 
       expect(await tagsService.update(1, {})).toStrictEqual(result);
+    });
+
+    it('should affect 0 rows', async () => {
+      const result = {
+        generatedMaps: [],
+        raw: [],
+        affected: 0,
+      };
+
+      const undefinedId = 10;
+      expect(await tagsService.update(undefinedId, {})).toStrictEqual(result);
     });
   });
 
@@ -71,6 +87,17 @@ describe('TagsService', () => {
 
       expect(await tagsService.delete(1)).toStrictEqual(result);
       expect(await tagsService.findAll()).toHaveLength(0);
+    });
+
+    it('should affect 0 rows', async () => {
+      const result = {
+        generatedMaps: [],
+        raw: [],
+        affected: 0,
+      };
+
+      const undefinedId = 10;
+      expect(await tagsService.delete(undefinedId)).toStrictEqual(result);
     });
   });
 });

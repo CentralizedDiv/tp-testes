@@ -14,7 +14,7 @@ export const repositoryMockFactory = <T extends BaseEntity>(
     find,
     findOne,
     save: jest.fn((entity) => {
-      bd.push(entity);
+      bd.push({ id: bd.length + 1, ...entity });
       return entity;
     }),
     update: jest.fn((id, partialEntity: Partial<T>) => {

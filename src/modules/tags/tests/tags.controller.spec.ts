@@ -57,6 +57,11 @@ describe('TagsController', () => {
     it('should return a Tag', async () => {
       expect(await tagsController.findById(entity.id)).toStrictEqual(entity);
     });
+
+    it('should return undefined', async () => {
+      const undefinedId = 10;
+      expect(await tagsController.findById(undefinedId)).toBe(undefined);
+    });
   });
 
   describe('update', () => {
@@ -67,7 +72,20 @@ describe('TagsController', () => {
         affected: 1,
       };
 
-      expect(await tagsController.update(1, {})).toStrictEqual(result);
+      expect(await tagsController.update(entity.id, {})).toStrictEqual(result);
+    });
+
+    it('should affect 0 rows', async () => {
+      const result = {
+        generatedMaps: [],
+        raw: [],
+        affected: 0,
+      };
+
+      const undefinedId = 10;
+      expect(await tagsController.update(undefinedId, {})).toStrictEqual(
+        result,
+      );
     });
   });
 
@@ -80,6 +98,17 @@ describe('TagsController', () => {
       };
 
       expect(await tagsController.delete(1)).toStrictEqual(result);
+    });
+
+    it('should affect 0 rows', async () => {
+      const result = {
+        generatedMaps: [],
+        raw: [],
+        affected: 0,
+      };
+
+      const undefinedId = 10;
+      expect(await tagsController.delete(undefinedId)).toStrictEqual(result);
     });
   });
 });

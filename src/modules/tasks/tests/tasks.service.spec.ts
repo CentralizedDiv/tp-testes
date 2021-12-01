@@ -1,17 +1,16 @@
-import { ListsService } from './../../list/lists.service';
-import { Tag } from './../../tags/tag.entity';
-import { TagsService } from './../../tags/tags.service';
-import { repositoryMockFactory } from './../../../utils/testing-utils';
-import { Subtask } from './../entities/sub-task.entity';
-import { TasksService } from './../tasks.service';
-import { TasksController } from './../tasks.controller';
+import { ListsService } from '../../list/lists.service';
+import { Tag } from '../../tags/tag.entity';
+import { TagsService } from '../../tags/tags.service';
+import { repositoryMockFactory } from '../../../utils/testing-utils';
+import { Subtask } from '../entities/sub-task.entity';
+import { TasksService } from '../tasks.service';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Task, TaskPriority } from './../entities/task.entity';
+import { Task, TaskPriority } from '../entities/task.entity';
 import { List } from '../../list/list.entity';
 
 describe('TasksController', () => {
-  let tasksController: TasksController;
+  let tasksService: TasksService;
 
   const taskEntity: Task = {
     label: 'Escrever teste',
@@ -71,7 +70,6 @@ describe('TasksController', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      controllers: [TasksController],
       providers: [
         TasksService,
         TagsService,
@@ -95,24 +93,24 @@ describe('TasksController', () => {
       ],
     }).compile();
 
-    tasksController = moduleRef.get<TasksController>(TasksController);
+    tasksService = moduleRef.get<TasksService>(TasksService);
   });
 
   describe('findAll', () => {
     it('should return an array of tasks', async () => {
-      expect(await tasksController.findAll()).toStrictEqual([taskEntity]);
+      expect(await tasksService.findAll()).toStrictEqual([taskEntity]);
     });
   });
 
   describe('findById', () => {
     it('should return a task', async () => {
-      expect(await tasksController.findById(taskEntity.id)).toStrictEqual(
+      expect(await tasksService.findById(taskEntity.id)).toStrictEqual(
         taskEntity,
       );
     });
 
     it('should return undefined on an non-existing task', async () => {
-      expect(await tasksController.findById(10)).toBe(undefined);
+      expect(await tasksService.findById(10)).toBe(undefined);
     });
   });
 
@@ -130,16 +128,16 @@ describe('TasksController', () => {
         priority: TaskPriority.HIGH,
       };
 
-      expect(await tasksController.create(task)).toEqual(task);
+      expect(await tasksService.create(task)).toEqual(task);
     });
 
     it('should return the new subtask', async () => {
       const subtask = {
         label: 'Teste subtasks',
       };
-      expect(
-        await tasksController.createSubtask(taskEntity.id, subtask),
-      ).toEqual(subtask);
+      expect(await tasksService.createSubtask(taskEntity.id, subtask)).toEqual(
+        subtask,
+      );
     });
   });
 
@@ -151,7 +149,7 @@ describe('TasksController', () => {
         affected: 1,
       };
 
-      expect(await tasksController.update(taskEntity.id, {})).toStrictEqual(
+      expect(await tasksService.update(taskEntity.id, {})).toStrictEqual(
         result,
       );
     });
@@ -164,9 +162,7 @@ describe('TasksController', () => {
       };
 
       const undefinedId = 10;
-      expect(await tasksController.update(undefinedId, {})).toStrictEqual(
-        result,
-      );
+      expect(await tasksService.update(undefinedId, {})).toStrictEqual(result);
     });
 
     it('should return an update subtask result', async () => {
@@ -177,11 +173,7 @@ describe('TasksController', () => {
       };
 
       expect(
-        await tasksController.updateSubtask(
-          taskEntity.id,
-          subTaskEntity.id,
-          {},
-        ),
+        await tasksService.updateSubtask(taskEntity.id, subTaskEntity.id, {}),
       ).toStrictEqual(result);
     });
 
@@ -194,7 +186,7 @@ describe('TasksController', () => {
 
       const undefinedId = 10;
       expect(
-        await tasksController.updateSubtask(taskEntity.id, undefinedId, {}),
+        await tasksService.updateSubtask(taskEntity.id, undefinedId, {}),
       ).toStrictEqual(result);
     });
   });
@@ -207,7 +199,7 @@ describe('TasksController', () => {
         affected: 1,
       };
 
-      expect(await tasksController.delete(taskEntity.id)).toStrictEqual(result);
+      expect(await tasksService.delete(taskEntity.id)).toStrictEqual(result);
     });
 
     it('should affect 0 rows on delete task with undefined id', async () => {
@@ -218,7 +210,7 @@ describe('TasksController', () => {
       };
 
       const undefinedId = 10;
-      expect(await tasksController.delete(undefinedId)).toStrictEqual(result);
+      expect(await tasksService.delete(undefinedId)).toStrictEqual(result);
     });
 
     it('should return an delete subtask result', async () => {
@@ -228,9 +220,9 @@ describe('TasksController', () => {
         affected: 1,
       };
 
-      expect(
-        await tasksController.deleteSubtask(taskEntity.id, subTaskEntity.id),
-      ).toStrictEqual(result);
+      expect(await tasksService.deleteSubtask(taskEntity.id)).toStrictEqual(
+        result,
+      );
     });
 
     it('should affect 0 rows on delete subtask with undefined id', async () => {
@@ -241,9 +233,9 @@ describe('TasksController', () => {
       };
 
       const undefinedId = 10;
-      expect(
-        await tasksController.deleteSubtask(taskEntity.id, undefinedId),
-      ).toStrictEqual(result);
+      expect(await tasksService.deleteSubtask(undefinedId)).toStrictEqual(
+        result,
+      );
     });
   });
 });

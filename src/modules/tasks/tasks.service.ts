@@ -68,7 +68,6 @@ export class TasksService {
     if (subtaskDTO.completedAt) {
       subtask.completedAt = new Date(subtaskDTO.completedAt);
     }
-
     return this.subtasksRepository.update(subtaskId, subtask);
   }
 
