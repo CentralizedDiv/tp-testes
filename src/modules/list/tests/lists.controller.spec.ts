@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { repositoryMockFactory } from 'src/utils/testing-utils';
 import { List } from '../list.entity';
-import { ListsController } from '../LISTS.controller';
+import { ListsController } from '../lists.controller';
 import { ListsService } from '../lists.service';
 
 describe('ListsController', () => {
