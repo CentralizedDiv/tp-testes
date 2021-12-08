@@ -3,7 +3,7 @@ import { BaseEntity } from './common.entity';
 export const repositoryMockFactory = <T extends BaseEntity>(
   initialEntity: T,
 ) => {
-  const bd: T[] = [initialEntity];
+  let bd: T[] = [initialEntity];
 
   const find = jest.fn(() => bd.filter((entity) => entity.deletedAt === null));
   const findOne = jest.fn((id: number) =>
@@ -18,13 +18,18 @@ export const repositoryMockFactory = <T extends BaseEntity>(
       return entity;
     }),
     update: jest.fn((id, partialEntity: Partial<T>) => {
-      let entity = findOne(id);
+      const entity = findOne(id);
       let affected = 0;
       if (entity) {
-        entity = {
-          ...entity,
-          partialEntity,
-        };
+        bd = bd.map((_entity) => {
+          if (entity.id === _entity.id) {
+            _entity = {
+              ...entity,
+              ...partialEntity,
+            };
+          }
+          return _entity;
+        });
         affected = 1;
       }
       return {
@@ -46,5 +51,10 @@ export const repositoryMockFactory = <T extends BaseEntity>(
         affected,
       };
     }),
+    createQueryBuilder: jest.fn(() => ({
+      relation: jest.fn(() => ({
+        of: jest.fn(() => ({ loadMany: jest.fn(), addAndRemove: jest.fn() })),
+      })),
+    })),
   }));
 };

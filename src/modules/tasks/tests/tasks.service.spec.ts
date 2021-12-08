@@ -124,11 +124,16 @@ describe('TasksController', () => {
         completedAt: null,
         list: null,
         subtasks: null,
-        tags: null,
+        tagsIds: [1],
         priority: TaskPriority.HIGH,
       };
 
-      expect(await tasksService.create(task)).toEqual(task);
+      const taskWithTags = {
+        ...task,
+        tags: [tagEntity],
+      };
+
+      expect(await tasksService.create(task)).toEqual(taskWithTags);
     });
 
     it('should return the new subtask', async () => {
@@ -149,9 +154,37 @@ describe('TasksController', () => {
         affected: 1,
       };
 
-      expect(await tasksService.update(taskEntity.id, {})).toStrictEqual(
-        result,
-      );
+      expect(
+        await tasksService.update(taskEntity.id, { tagsIds: [1] }),
+      ).toStrictEqual(result);
+    });
+
+    it('should update dates', async () => {
+      let task = await tasksService.findById(taskEntity.id);
+      expect(task.completedAt).toBeNull();
+      expect(task.dueDate).toBeNull();
+
+      await tasksService.update(taskEntity.id, {
+        completedAt: '2021-12-08T14:55:00',
+        dueDate: '2021-12-08T16:00:00',
+      });
+
+      task = await tasksService.findById(taskEntity.id);
+
+      expect(task.completedAt).not.toBeNull();
+      expect(task.dueDate).not.toBeNull();
+    });
+
+    it('should update list', async () => {
+      let task = await tasksService.findById(taskEntity.id);
+      expect(task.list).toBeNull();
+
+      await tasksService.update(taskEntity.id, {
+        listId: 1,
+      });
+
+      task = await tasksService.findById(taskEntity.id);
+      expect(task.list).not.toBeNull();
     });
 
     it('should affect 0 rows on update task with undefined id', async () => {
@@ -173,7 +206,9 @@ describe('TasksController', () => {
       };
 
       expect(
-        await tasksService.updateSubtask(taskEntity.id, subTaskEntity.id, {}),
+        await tasksService.updateSubtask(taskEntity.id, subTaskEntity.id, {
+          completedAt: '2021-12-08',
+        }),
       ).toStrictEqual(result);
     });
 
