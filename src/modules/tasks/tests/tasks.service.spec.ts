@@ -1,13 +1,13 @@
-import { ListsService } from '../../list/lists.service';
-import { Tag } from '../../tags/tag.entity';
-import { TagsService } from '../../tags/tags.service';
-import { repositoryMockFactory } from '../../../utils/testing-utils';
-import { Subtask } from '../entities/sub-task.entity';
-import { TasksService } from '../tasks.service';
+import { ListsService } from 'src/modules/list/lists.service';
+import { Tag } from 'src/modules/tags/tag.entity';
+import { TagsService } from 'src/modules/tags/tags.service';
+import { repositoryMockFactory } from 'src/utils/testing-utils';
+import { Subtask } from 'src/modules/tasks/entities/sub-task.entity';
+import { TasksService } from 'src/modules/tasks/tasks.service';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Task, TaskPriority } from '../entities/task.entity';
-import { List } from '../../list/list.entity';
+import { Task, TaskPriority } from 'src/modules/tasks/entities/task.entity';
+import { List } from 'src/modules/list/list.entity';
 
 describe('TasksController', () => {
   let tasksService: TasksService;

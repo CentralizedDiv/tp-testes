@@ -21,7 +21,10 @@ jobs:
       - name: Install
         run: yarn install
 
-      - name: Test
+      - name: Unit Tests
+        run: yarn test
+
+      - name: e2e Tests
         run: yarn test
 
       - name: Generate coverage report

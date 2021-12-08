@@ -1,6 +1,6 @@
-import { BaseEntity } from './../../utils/common.entity';
+import { BaseEntity } from 'src/utils/common.entity';
 import { Entity, Column, ManyToMany } from 'typeorm';
-import { Task } from '../tasks/entities/task.entity';
+import { Task } from 'src/modules/tasks/entities/task.entity';
 
 @Entity()
 export class Tag extends BaseEntity {

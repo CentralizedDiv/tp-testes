@@ -1,6 +1,6 @@
 import { List } from 'src/modules/list/list.entity';
 import { Tag } from 'src/modules/tags/tag.entity';
-import { BaseEntity } from './../../../utils/common.entity';
+import { BaseEntity } from 'src/utils/common.entity';
 import {
   Entity,
   Column,

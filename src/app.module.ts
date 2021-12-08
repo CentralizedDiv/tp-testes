@@ -13,7 +13,8 @@ import { TasksModule } from './modules/tasks/tasks.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: './db.sql',
+      database:
+        process.env.NODE_ENV === 'test' ? './test/testingdb.sql' : './db.sql',
       entities: [Tag, List, Task, Subtask],
       synchronize: true,
     }),
