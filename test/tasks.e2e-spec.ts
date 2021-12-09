@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { Repository, getConnection } from 'typeorm';
 import { Task, TaskPriority } from 'src/modules/tasks/entities/task.entity';
+import { unlinkSync } from 'fs';
 
 describe('Tasks (e2e)', () => {
   let app: INestApplication;
@@ -43,6 +44,7 @@ describe('Tasks (e2e)', () => {
       "delete from sqlite_sequence where name='task'",
     );
     await app.close();
+    unlinkSync('./test/testingdb.sql');
   });
 
   it('should return a task array', (done) => {
