@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { Repository, getConnection } from 'typeorm';
 import { Task, TaskPriority } from 'src/modules/tasks/entities/task.entity';
+
 describe('Tasks (e2e)', () => {
   let app: INestApplication;
   let tasksRepository: Repository<Task>;
@@ -19,7 +20,7 @@ describe('Tasks (e2e)', () => {
     const connection = getConnection();
     tasksRepository = connection.getRepository(Task);
 
-    await request(app.getHttpServer).post('/tasks').send({
+    await request(app.getHttpServer()).post('/tasks').send({
       label: 'Escrever teste',
       description: 'Testes de unidade para o tp',
       dueDate: null,
@@ -28,14 +29,14 @@ describe('Tasks (e2e)', () => {
       priority: TaskPriority.MEDIUM,
     });
     await request(app.getHttpServer())
-      .post('/1/sub-task')
+      .post('/tasks/1/sub-tasks')
       .send({ label: 'tasks e2e tests' });
   });
 
   afterAll(async () => {
-    await tasksRepository.query('delete from subTask');
+    await tasksRepository.query('delete from subtask');
     await tasksRepository.query(
-      "delete from sqlite_sequence where name='subTask'",
+      "delete from sqlite_sequence where name='subtask'",
     );
     await tasksRepository.query('delete from task');
     await tasksRepository.query(
@@ -60,9 +61,7 @@ describe('Tasks (e2e)', () => {
     request(app.getHttpServer())
       .get('/tasks/1')
       .expect(200)
-      .then(async (response) => {
-        return response.body;
-      })
+      .then((response) => response.body)
       .then((response) => {
         expect(response.label).toBe('Escrever teste');
         done();
@@ -74,17 +73,53 @@ describe('Tasks (e2e)', () => {
     request(app.getHttpServer())
       .patch('/tasks/1')
       .send({
-        description: 'Testes e2e',
+        label: 'Testes e2e',
       })
       .then(() => {
         request(app.getHttpServer())
           .get('/tasks/1')
           .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
+          .then((response) => response.body)
           .then((response) => {
             expect(response.label).toBe('Testes e2e');
+            done();
+          })
+          .catch((err) => done(err));
+      })
+      .catch((err) => done(err));
+  });
+
+  it('should update a subtask', (done) => {
+    request(app.getHttpServer())
+      .patch('/tasks/1/sub-tasks/1')
+      .send({ label: 'tasks e2e tests - updated' })
+      .then(() => {
+        request(app.getHttpServer())
+          .get('/tasks/1')
+          .expect(200)
+          .then((response) => response.body)
+          .then((response) => {
+            expect(response.subtasks[0].label).toBe(
+              'tasks e2e tests - updated',
+            );
+            done();
+          })
+          .catch((err) => done(err));
+      })
+      .catch((err) => done(err));
+  });
+
+  it('should delete a subtask', (done) => {
+    request(app.getHttpServer())
+      .delete('/tasks/1/sub-tasks/1')
+      .send({ label: 'tasks e2e tests - updated' })
+      .then(() => {
+        request(app.getHttpServer())
+          .get('/tasks/1')
+          .expect(200)
+          .then((response) => response.body)
+          .then((response) => {
+            expect(response.subtasks).toHaveLength(0);
             done();
           })
           .catch((err) => done(err));
@@ -99,52 +134,9 @@ describe('Tasks (e2e)', () => {
         request(app.getHttpServer())
           .get('/tasks')
           .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
+          .then(async (response) => response.body)
           .then((response) => {
             expect(response).toHaveLength(0);
-            done();
-          })
-          .catch((err) => done(err));
-      })
-      .catch((err) => done(err));
-  });
-
-  it('should update a subtask', (done) => {
-    request(app.getHttpServer())
-      .patch('1/sub-task/1')
-      .send({ label: 'tasks e2e tests - updated' })
-      .then(() => {
-        request(app.getHttpServer())
-          .get('/tasks/1')
-          .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
-          .then((response) => {
-            expect(response.subtasks[0].label).toBe(
-              'tasks e2e tests - updated',
-            );
-            done();
-          })
-          .catch((err) => done(err));
-      })
-      .catch((err) => done(err));
-  });
-  it('should delete a subtask', (done) => {
-    request(app.getHttpServer())
-      .delete('1/sub-task/1')
-      .send({ label: 'tasks e2e tests - updated' })
-      .then(() => {
-        request(app.getHttpServer())
-          .get('/tasks/1')
-          .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
-          .then((response) => {
-            expect(response.subtasks).toHaveLength(0);
             done();
           })
           .catch((err) => done(err));

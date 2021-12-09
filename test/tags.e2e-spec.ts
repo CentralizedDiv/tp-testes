@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { getConnection, Repository } from 'typeorm';
 import { Tag } from 'src/modules/tags/tag.entity';
 
-describe('Tags Controller (e2e)', () => {
+describe('Tags (e2e)', () => {
   let app: INestApplication;
   let tagsRepository: Repository<Tag>;
 
@@ -48,9 +48,7 @@ describe('Tags Controller (e2e)', () => {
     request(app.getHttpServer())
       .get('/tags/1')
       .expect(200)
-      .then(async (response) => {
-        return response.body;
-      })
+      .then((response) => response.body)
       .then((response) => {
         expect(response.label).toBe('Importante');
         done();
@@ -68,9 +66,7 @@ describe('Tags Controller (e2e)', () => {
         request(app.getHttpServer())
           .get('/tags/1')
           .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
+          .then((response) => response.body)
           .then((response) => {
             expect(response.label).toBe('Menos Importante');
             done();
@@ -87,9 +83,7 @@ describe('Tags Controller (e2e)', () => {
         request(app.getHttpServer())
           .get('/tags')
           .expect(200)
-          .then(async (response) => {
-            return response.body;
-          })
+          .then((response) => response.body)
           .then((response) => {
             expect(response).toHaveLength(0);
             done();
